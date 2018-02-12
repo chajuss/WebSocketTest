@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F19F4EDA6BE17D7AF3C39F0 /* Pods_WebSocketTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BF626BBD3F71182B141AB3 /* Pods_WebSocketTest.framework */; };
+		87469D6920320F42004EF76F /* TestServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D6820320F42004EF76F /* TestServer.swift */; };
+		87469D6B20321178004EF76F /* TestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D6A20321178004EF76F /* TestClient.swift */; };
 		8756FC1F20320E6900AA0AFC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8756FC1E20320E6900AA0AFC /* AppDelegate.swift */; };
 		8756FC2120320E6900AA0AFC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8756FC2020320E6900AA0AFC /* ViewController.swift */; };
 		8756FC2420320E6900AA0AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8756FC2220320E6900AA0AFC /* Main.storyboard */; };
@@ -15,6 +18,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05BF626BBD3F71182B141AB3 /* Pods_WebSocketTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WebSocketTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		152B97D5BD271750B5C783AA /* Pods-WebSocketTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSocketTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebSocketTest/Pods-WebSocketTest.release.xcconfig"; sourceTree = "<group>"; };
+		87469D6820320F42004EF76F /* TestServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestServer.swift; sourceTree = "<group>"; };
+		87469D6A20321178004EF76F /* TestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClient.swift; sourceTree = "<group>"; };
+		87469D6C203222A9004EF76F /* WebSocketTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebSocketTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		8756FC1B20320E6900AA0AFC /* WebSocketTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebSocketTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8756FC1E20320E6900AA0AFC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8756FC2020320E6900AA0AFC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +30,7 @@
 		8756FC2520320E6900AA0AFC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8756FC2820320E6900AA0AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8756FC2A20320E6900AA0AFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA0F88E9D4B77580A07D691F /* Pods-WebSocketTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSocketTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebSocketTest/Pods-WebSocketTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F19F4EDA6BE17D7AF3C39F0 /* Pods_WebSocketTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,8 +48,11 @@
 		8756FC1220320E6900AA0AFC = {
 			isa = PBXGroup;
 			children = (
+				87469D6C203222A9004EF76F /* WebSocketTest-Bridging-Header.h */,
 				8756FC1D20320E6900AA0AFC /* WebSocketTest */,
 				8756FC1C20320E6900AA0AFC /* Products */,
+				E67B73A88C8C701FF9CE7491 /* Pods */,
+				E863DE60ACABDF2D3454F23F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,12 +69,31 @@
 			children = (
 				8756FC1E20320E6900AA0AFC /* AppDelegate.swift */,
 				8756FC2020320E6900AA0AFC /* ViewController.swift */,
+				87469D6820320F42004EF76F /* TestServer.swift */,
+				87469D6A20321178004EF76F /* TestClient.swift */,
 				8756FC2220320E6900AA0AFC /* Main.storyboard */,
 				8756FC2520320E6900AA0AFC /* Assets.xcassets */,
 				8756FC2720320E6900AA0AFC /* LaunchScreen.storyboard */,
 				8756FC2A20320E6900AA0AFC /* Info.plist */,
 			);
 			path = WebSocketTest;
+			sourceTree = "<group>";
+		};
+		E67B73A88C8C701FF9CE7491 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FA0F88E9D4B77580A07D691F /* Pods-WebSocketTest.debug.xcconfig */,
+				152B97D5BD271750B5C783AA /* Pods-WebSocketTest.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		E863DE60ACABDF2D3454F23F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				05BF626BBD3F71182B141AB3 /* Pods_WebSocketTest.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +103,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8756FC2D20320E6900AA0AFC /* Build configuration list for PBXNativeTarget "WebSocketTest" */;
 			buildPhases = (
+				497C6C5A865C1C13A47A4F13 /* [CP] Check Pods Manifest.lock */,
 				8756FC1720320E6900AA0AFC /* Sources */,
 				8756FC1820320E6900AA0AFC /* Frameworks */,
 				8756FC1920320E6900AA0AFC /* Resources */,
+				EF465B6C119F7398F3E8C8C1 /* [CP] Embed Pods Frameworks */,
+				797C75BC9BCF0A8BFFCD18B3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -131,12 +166,80 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		497C6C5A865C1C13A47A4F13 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WebSocketTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		797C75BC9BCF0A8BFFCD18B3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebSocketTest/Pods-WebSocketTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EF465B6C119F7398F3E8C8C1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-WebSocketTest/Pods-WebSocketTest-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BlueSocket/Socket.framework",
+				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/HTTPParserC/HTTPParserC.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/Telegraph/Telegraph.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Socket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HTTPParserC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Telegraph.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebSocketTest/Pods-WebSocketTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8756FC1720320E6900AA0AFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				8756FC2120320E6900AA0AFC /* ViewController.swift in Sources */,
+				87469D6920320F42004EF76F /* TestServer.swift in Sources */,
+				87469D6B20321178004EF76F /* TestClient.swift in Sources */,
 				8756FC1F20320E6900AA0AFC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,14 +375,16 @@
 		};
 		8756FC2E20320E6900AA0AFC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA0F88E9D4B77580A07D691F /* Pods-WebSocketTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7G52S54N54;
+				DEVELOPMENT_TEAM = 855K6T54ZF;
 				INFOPLIST_FILE = WebSocketTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chajuss.WebSocketTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebSocketTest-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -287,14 +392,16 @@
 		};
 		8756FC2F20320E6900AA0AFC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 152B97D5BD271750B5C783AA /* Pods-WebSocketTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7G52S54N54;
+				DEVELOPMENT_TEAM = 855K6T54ZF;
 				INFOPLIST_FILE = WebSocketTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chajuss.WebSocketTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebSocketTest-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
