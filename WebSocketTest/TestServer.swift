@@ -24,7 +24,7 @@ extension TestServer: ServerWebSocketDelegate {
     }
     
     func server(_ server: Server, webSocket: WebSocket, didReceiveMessage message: WebSocketMessage) {
-        print("WebSocket receivea message")
+        print("WebSocket received a message")
     }
     
     func server(_ server: Server, webSocket: WebSocket, didSendMessage message: WebSocketMessage) {
@@ -52,7 +52,7 @@ extension TestServer: PSWebSocketServerDelegate {
     }
     
     func server(_ server: PSWebSocketServer!, webSocket: PSWebSocket!, didReceiveMessage message: Any!) {
-        print("WebSocket receivea message")
+        print("WebSocket received a message")
     }
     
     func server(_ server: PSWebSocketServer!, webSocket: PSWebSocket!, didFailWithError error: Error!) {
