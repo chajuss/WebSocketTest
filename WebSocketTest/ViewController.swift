@@ -102,8 +102,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let dataOutput = AVCaptureVideoDataOutput()
             dataOutput.videoSettings = [((kCVPixelBufferPixelFormatTypeKey as NSString) as String): NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange as UInt32)]
             dataOutput.alwaysDiscardsLateVideoFrames = true
-            if videoSession.canSetSessionPreset(.hd1280x720) {
-                videoSession.sessionPreset = .hd1280x720
+            if videoSession.canSetSessionPreset(.hd1920x1080) {
+                videoSession.sessionPreset = .hd1920x1080
             }
             
             guard videoSession.canAddOutput(dataOutput) == true else {
