@@ -25,9 +25,9 @@ extension TestClient: WebSocketDelegate {
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        print("got some data from websocket")
-        parseData(data: data)
-        respondToServer(data: data)
+        print("got some data from websocket, bytes=\(data.count)")
+//        parseData(data: data)
+        respondToServer()
         
     }
 }
@@ -109,8 +109,40 @@ class TestClient: NSObject {
         }
     }
     
-    private func respondToServer(data: Data) {
-        webSocket.write(data: data)
+    private func prapareData() -> Data {
+        var data = Data()
+        var byte101: UInt8 = UInt8(101).bigEndian
+        withUnsafePointer(to: &byte101) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
+        }
+        var byte0: UInt8 = UInt8(0).bigEndian
+        withUnsafePointer(to: &byte0) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
+        }
+        var short: Int16 = Int16(255).bigEndian
+        withUnsafePointer(to: &short) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<Int16>.size)
+        }
+        var byte1: UInt8 = UInt8(1).bigEndian
+        withUnsafePointer(to: &byte1) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
+        }
+        var byte2: UInt8 = UInt8(0).bigEndian
+        withUnsafePointer(to: &byte2) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
+        }
+        var int: Int32 = Int32(300).bigEndian
+        withUnsafePointer(to: &int) {
+            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<Int32>.size)
+        }
+        return data
+    }
+    
+    private func respondToServer() {
+        DispatchQueue.global(qos: .utility).async {
+            let data = self.prapareData()
+            self.webSocket.write(data: data)
+        }
     }
     
     private func startClientListenerTimer() {

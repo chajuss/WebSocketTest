@@ -10,6 +10,8 @@
 		4F19F4EDA6BE17D7AF3C39F0 /* Pods_WebSocketTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BF626BBD3F71182B141AB3 /* Pods_WebSocketTest.framework */; };
 		87469D6920320F42004EF76F /* TestServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D6820320F42004EF76F /* TestServer.swift */; };
 		87469D6B20321178004EF76F /* TestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D6A20321178004EF76F /* TestClient.swift */; };
+		87469D702032F18F004EF76F /* VideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D6F2032F18F004EF76F /* VideoEncoder.swift */; };
+		87469D7220330CA7004EF76F /* ServerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87469D7120330CA7004EF76F /* ServerWrapper.swift */; };
 		8756FC1F20320E6900AA0AFC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8756FC1E20320E6900AA0AFC /* AppDelegate.swift */; };
 		8756FC2120320E6900AA0AFC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8756FC2020320E6900AA0AFC /* ViewController.swift */; };
 		8756FC2420320E6900AA0AFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8756FC2220320E6900AA0AFC /* Main.storyboard */; };
@@ -23,6 +25,8 @@
 		87469D6820320F42004EF76F /* TestServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestServer.swift; sourceTree = "<group>"; };
 		87469D6A20321178004EF76F /* TestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClient.swift; sourceTree = "<group>"; };
 		87469D6C203222A9004EF76F /* WebSocketTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebSocketTest-Bridging-Header.h"; sourceTree = "<group>"; };
+		87469D6F2032F18F004EF76F /* VideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEncoder.swift; sourceTree = "<group>"; };
+		87469D7120330CA7004EF76F /* ServerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerWrapper.swift; sourceTree = "<group>"; };
 		8756FC1B20320E6900AA0AFC /* WebSocketTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebSocketTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8756FC1E20320E6900AA0AFC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8756FC2020320E6900AA0AFC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +75,8 @@
 				8756FC2020320E6900AA0AFC /* ViewController.swift */,
 				87469D6820320F42004EF76F /* TestServer.swift */,
 				87469D6A20321178004EF76F /* TestClient.swift */,
+				87469D6F2032F18F004EF76F /* VideoEncoder.swift */,
+				87469D7120330CA7004EF76F /* ServerWrapper.swift */,
 				8756FC2220320E6900AA0AFC /* Main.storyboard */,
 				8756FC2520320E6900AA0AFC /* Assets.xcassets */,
 				8756FC2720320E6900AA0AFC /* LaunchScreen.storyboard */,
@@ -239,7 +245,9 @@
 			files = (
 				8756FC2120320E6900AA0AFC /* ViewController.swift in Sources */,
 				87469D6920320F42004EF76F /* TestServer.swift in Sources */,
+				87469D7220330CA7004EF76F /* ServerWrapper.swift in Sources */,
 				87469D6B20321178004EF76F /* TestClient.swift in Sources */,
+				87469D702032F18F004EF76F /* VideoEncoder.swift in Sources */,
 				8756FC1F20320E6900AA0AFC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

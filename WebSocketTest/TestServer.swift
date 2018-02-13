@@ -70,7 +70,7 @@ class TestServer: NSObject {
     
     public func stopServer() {
         print("Stopping server")
-        stopServerTransmitTimer()
+//        stopServerTransmitTimer()
         stopServerBroadcastTimer()
         if server != nil {
             server.stop()
@@ -83,30 +83,31 @@ class TestServer: NSObject {
     }
     
     // MARK: - Send Data
-    public func startSendingData() {
-        startServerTransmitTimer()
-    }
+//    public func startSendingData() {
+//        startServerTransmitTimer()
+//    }
+//
+//    private func startServerTransmitTimer() {
+//        let queue = DispatchQueue(label: "com.chajuss.server.transmitTimer")
+//        transmitTimer = DispatchSource.makeTimerSource(queue: queue)
+//        transmitTimer!.schedule(deadline: .now(), repeating: .milliseconds(retransmitTime))
+//        transmitTimer!.setEventHandler { [weak self] in
+//            self?.sendData()
+//        }
+//        transmitTimer!.resume()
+//    }
+//
+//    private func stopServerTransmitTimer() {
+//        transmitTimer?.cancel()
+//        transmitTimer = nil
+//    }
     
-    private func startServerTransmitTimer() {
-        let queue = DispatchQueue(label: "com.chajuss.server.transmitTimer")
-        transmitTimer = DispatchSource.makeTimerSource(queue: queue)
-        transmitTimer!.schedule(deadline: .now(), repeating: .milliseconds(retransmitTime))
-        transmitTimer!.setEventHandler { [weak self] in
-            self?.sendData()
-        }
-        transmitTimer!.resume()
-    }
-    
-    private func stopServerTransmitTimer() {
-        transmitTimer?.cancel()
-        transmitTimer = nil
-    }
-    
-    private func sendData() {
+    public func sendData(data: Data) {
         print("Sending data on WebSocket")
-        let data = prapareData()
-        for (_, websocket) in websocketMap {
-            websocket.send(data: data)
+        socketQueue.async {
+            for (_, websocket) in self.websocketMap {
+                websocket.send(data: data)
+            }
         }
     }
     
