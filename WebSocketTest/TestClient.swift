@@ -26,19 +26,15 @@ extension TestClient: WebSocketDelegate {
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         print("got some data from websocket")
-        let firstByte = data.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
-        guard firstByte == 101 else {
-            print("Currupted data=\(firstByte) (expected 101)")
-            return
-        }
+        parseData(data: data)
+        respondToServer(data: data)
+        
     }
-    
-    
 }
 
 class TestClient: NSObject {
     
-    private var udpTimer: DispatchSourceTimer?
+    private var listenerTimer: DispatchSourceTimer?
     private let broadcastPort = 1111 //UDP
     private let broadcastRetransmitTime = 1
     private let websocketStringPrefix = "ws://"
@@ -50,7 +46,7 @@ class TestClient: NSObject {
     override init() {
         super.init()
         udpSocket = try? Socket.create(family: Socket.ProtocolFamily.inet, type: Socket.SocketType.datagram, proto: Socket.SocketProtocol.udp)
-        startTimerClient()
+        startClientListenerTimer()
         
     }
     
@@ -60,7 +56,7 @@ class TestClient: NSObject {
     
     func stopClient() {
         print("Stopping Client")
-        stopTimerClient()
+        stopClientListenerTimer()
         if udpSocket != nil {
             udpSocket.close()
             udpSocket = nil
@@ -71,19 +67,65 @@ class TestClient: NSObject {
         }
     }
     
-    private func startTimerClient() {
-        let queue = DispatchQueue(label: "com.chajuss.client.timer")
-        udpTimer = DispatchSource.makeTimerSource(queue: queue)
-        udpTimer!.schedule(deadline: .now(), repeating: .seconds(broadcastRetransmitTime))
-        udpTimer!.setEventHandler { [weak self] in
-            self?.detectServer()
+    private func parseData(data: Data) {
+        let firstByte = data.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
+        guard firstByte == 101 else {
+            print("Currupted data=\(firstByte) (expected 101)")
+            return
         }
-        udpTimer!.resume()
+        var currData = data.advanced(by: MemoryLayout<UInt8>.size)
+        let byte0 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
+        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
+        guard byte0 == 0 else {
+            print("Currupted data=\(firstByte) (expected 0)")
+            return
+        }
+        
+        let short = currData.withUnsafeBytes {(ptr: UnsafePointer<Int16>) -> Int16 in return ptr.pointee.bigEndian}
+        currData = currData.advanced(by: MemoryLayout<Int16>.size)
+        guard short == 255 else {
+            print("Currupted data=\(firstByte) (expected 255)")
+            return
+        }
+        
+        let byte1 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
+        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
+        guard byte1 == 1 else {
+            print("Currupted data=\(firstByte) (expected 1)")
+            return
+        }
+        
+        let byte2 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
+        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
+        guard byte2 == 0 else {
+            print("Currupted data=\(firstByte) (expected 0)")
+            return
+        }
+        
+        let int = currData.withUnsafeBytes {(ptr: UnsafePointer<Int32>) -> Int32 in return ptr.pointee.bigEndian}
+        guard int == 300 else {
+            print("Currupted data=\(firstByte) (expected 300)")
+            return
+        }
     }
     
-    private func stopTimerClient() {
-        udpTimer?.cancel()
-        udpTimer = nil
+    private func respondToServer(data: Data) {
+        webSocket.write(data: data)
+    }
+    
+    private func startClientListenerTimer() {
+        let queue = DispatchQueue(label: "com.chajuss.client.timer")
+        listenerTimer = DispatchSource.makeTimerSource(queue: queue)
+        listenerTimer!.schedule(deadline: .now(), repeating: .seconds(broadcastRetransmitTime))
+        listenerTimer!.setEventHandler { [weak self] in
+            self?.detectServer()
+        }
+        listenerTimer!.resume()
+    }
+    
+    private func stopClientListenerTimer() {
+        listenerTimer?.cancel()
+        listenerTimer = nil
     }
     
     private func connectToServer(serverIP: String) {
@@ -123,7 +165,7 @@ class TestClient: NSObject {
         print("got UDP code from \(hostIP)")
         
         DispatchQueue.main.async {
-            self.stopTimerClient()
+            self.stopClientListenerTimer()
             self.connectToServer(serverIP: hostIP)
         }
     }

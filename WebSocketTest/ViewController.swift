@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var serverButton: UIButton!
     @IBOutlet weak var clientButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var transmitButton: UIButton!
     
     // MARK: - Members
     private var testServer: TestServer?
@@ -29,6 +30,7 @@ class ViewController: UIViewController {
         setupServerButtonTapped()
         setupClientButtonTapped()
         setupStopButtonTapped()
+        setupTransmitButtonTapped()
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,6 +44,7 @@ class ViewController: UIViewController {
             self.clientButton.isHidden = true
             self.serverButton.isHidden = true
             self.stopButton.isHidden = false
+            self.transmitButton.isHidden = false
             self.testServer = TestServer()
         }).disposed(by: disposeBag)
     }
@@ -60,8 +63,15 @@ class ViewController: UIViewController {
             self.serverButton.isHidden = false
             self.clientButton.isHidden = false
             self.stopButton.isHidden = true
+            self.transmitButton.isHidden = true
             self.testServer?.stopServer()
             self.testClient?.stopClient()
+        }).disposed(by: disposeBag)
+    }
+    
+    private func setupTransmitButtonTapped() {
+        transmitButton.rx.tap.subscribe({ [unowned self] _ in
+            self.testServer?.startSendingData()
         }).disposed(by: disposeBag)
     }
 }

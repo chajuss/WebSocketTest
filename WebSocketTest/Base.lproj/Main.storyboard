@@ -33,18 +33,28 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQL-lU-Q3B">
-                                <rect key="frame" x="139.5" y="266" width="41" height="36"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="Stop"/>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KJK-1O-6NA">
+                                <rect key="frame" x="160" y="284" width="0.0" height="0.0"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQL-lU-Q3B">
+                                        <rect key="frame" x="-149.5" y="-284" width="99" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Disconnect"/>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oiT-C0-u98">
+                                        <rect key="frame" x="-160" y="-284" width="120" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Transmit Data"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="xQL-lU-Q3B" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="U2Y-lG-j4U"/>
+                            <constraint firstItem="KJK-1O-6NA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ErJ-Th-R9G"/>
+                            <constraint firstItem="KJK-1O-6NA" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="IP9-9d-ca2"/>
                             <constraint firstItem="CR5-v7-YjP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cWt-9P-qFe"/>
                             <constraint firstItem="CR5-v7-YjP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="kC2-li-a4B"/>
-                            <constraint firstItem="xQL-lU-Q3B" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kbD-NG-zGC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -52,6 +62,7 @@
                         <outlet property="clientButton" destination="ea6-al-G0C" id="KLc-Dj-2zi"/>
                         <outlet property="serverButton" destination="QDR-3B-MM0" id="lfT-g4-inp"/>
                         <outlet property="stopButton" destination="xQL-lU-Q3B" id="qUS-50-R6B"/>
+                        <outlet property="transmitButton" destination="oiT-C0-u98" id="iJg-fh-qK0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -14,19 +14,16 @@ import Telegraph
 extension TestServer: ServerWebSocketDelegate {
     func server(_ server: Server, webSocketDidConnect webSocket: WebSocket, handshake: HTTPRequest) {
         print("WebSocket connected to Server")
-        let data = prapareData()
-        for i in 0...50000 {
-            print("Sending data iteration=\(i)")
-            sendData(data: data, websocket: webSocket)
-        }
+        websocketMap[webSocket as! WebSocketConnection] = webSocket
     }
     
     func server(_ server: Server, webSocketDidDisconnect webSocket: WebSocket, error: Error?) {
         print("WebSocket disconnected from Server")
+        _ = websocketMap.removeValue(forKey: webSocket as! WebSocketConnection)
     }
     
     func server(_ server: Server, webSocket: WebSocket, didReceiveMessage message: WebSocketMessage) {
-        // Not Implemented
+        print("WebSocket receivea message")
     }
     
     func server(_ server: Server, webSocket: WebSocket, didSendMessage message: WebSocketMessage) {
@@ -41,35 +38,40 @@ class TestServer: NSObject {
     
     private var socketDescriptor: Int32 = -1
     private let broadcastPort: UInt16 = 1111 //UDP
-    private var udpTimer: DispatchSourceTimer?
+    private var broadcastTimer: DispatchSourceTimer?
     private let broadcastRetransmitTime = 1
     
+    private var transmitTimer: DispatchSourceTimer?
+    private let retransmitTime = 30
     
+    private var websocketMap: [Telegraph.WebSocketConnection: Telegraph.WebSocket]!
     
     private let socketQueue = DispatchQueue(label: "com.chajuss.server.socket")
 
     // MARK: - TestServer Functions
     override init() {
         super.init()
+        websocketMap = [Telegraph.WebSocketConnection: Telegraph.WebSocket]()
         server = Server()
         server.webSocketDelegate = self
         print("Starting WebSocketServer with pingInterval=\(server.webSocketConfig.pingInterval) readTimeout=\(server.webSocketConfig.readTimeout) writeHeaderTimeout=\(server.webSocketConfig.writeHeaderTimeout) writePayloadTimeout=\(server.webSocketConfig.writePayloadTimeout)")
         try? server.start(onPort: UInt16(serverPort))
         guard bindBroadcastSocket() != -1 else {
             print("failed to bind broadcast socket")
-            startTimerServer()
+            startServerBroadcastTimer()
             return
         }
-        startTimerServer()
+        startServerBroadcastTimer()
     }
     
     deinit {
         stopServer()
     }
     
-    func stopServer() {
+    public func stopServer() {
         print("Stopping server")
-        stopTimerServer()
+        stopServerTransmitTimer()
+        stopServerBroadcastTimer()
         if server != nil {
             server.stop()
             server = nil
@@ -81,8 +83,29 @@ class TestServer: NSObject {
     }
     
     // MARK: - Send Data
-    private func sendData(data :Data, websocket: Telegraph.WebSocket) {
-        socketQueue.async {
+    public func startSendingData() {
+        startServerTransmitTimer()
+    }
+    
+    private func startServerTransmitTimer() {
+        let queue = DispatchQueue(label: "com.chajuss.server.transmitTimer")
+        transmitTimer = DispatchSource.makeTimerSource(queue: queue)
+        transmitTimer!.schedule(deadline: .now(), repeating: .milliseconds(retransmitTime))
+        transmitTimer!.setEventHandler { [weak self] in
+            self?.sendData()
+        }
+        transmitTimer!.resume()
+    }
+    
+    private func stopServerTransmitTimer() {
+        transmitTimer?.cancel()
+        transmitTimer = nil
+    }
+    
+    private func sendData() {
+        print("Sending data on WebSocket")
+        let data = prapareData()
+        for (_, websocket) in websocketMap {
             websocket.send(data: data)
         }
     }
@@ -105,8 +128,8 @@ class TestServer: NSObject {
         withUnsafePointer(to: &byte1) {
             data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
         }
-        var type: UInt8 = UInt8(0).bigEndian
-        withUnsafePointer(to: &type) {
+        var byte2: UInt8 = UInt8(0).bigEndian
+        withUnsafePointer(to: &byte2) {
             data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
         }
         var int: Int32 = Int32(300).bigEndian
@@ -117,20 +140,19 @@ class TestServer: NSObject {
     }
     
     // MARK: - Broadcast Methods
-    private func startTimerServer() {
-        let queue = DispatchQueue(label: "com.chajuss.server.timer")
-        udpTimer = DispatchSource.makeTimerSource(queue: queue)
-        udpTimer!.schedule(deadline: .now(), repeating: .seconds(broadcastRetransmitTime))
-        udpTimer!.setEventHandler { [weak self] in
-            print("Server timer called")
+    private func startServerBroadcastTimer() {
+        let queue = DispatchQueue(label: "com.chajuss.server.broadcastTimer")
+        broadcastTimer = DispatchSource.makeTimerSource(queue: queue)
+        broadcastTimer!.schedule(deadline: .now(), repeating: .seconds(broadcastRetransmitTime))
+        broadcastTimer!.setEventHandler { [weak self] in
             self?.sendBroadcast()
         }
-        udpTimer!.resume()
+        broadcastTimer!.resume()
     }
     
-    private func stopTimerServer() {
-        udpTimer?.cancel()
-        udpTimer = nil
+    private func stopServerBroadcastTimer() {
+        broadcastTimer?.cancel()
+        broadcastTimer = nil
     }
     
     private func sendBroadcast() {
