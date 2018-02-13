@@ -1,6 +1,6 @@
 # WebSocketTest
 
-This is a Qucik & Dirty implementation!
+This is a Quick & Dirty implementation!
 
 How to use:
 
