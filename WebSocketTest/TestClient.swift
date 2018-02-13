@@ -26,7 +26,6 @@ extension TestClient: WebSocketDelegate {
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         print("got some data from websocket, bytes=\(data.count)")
-//        parseData(data: data)
         respondToServer()
         
     }

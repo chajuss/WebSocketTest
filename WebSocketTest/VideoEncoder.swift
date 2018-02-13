@@ -124,10 +124,6 @@ class VideoEncoder: NSObject {
         }
     }
     
-    private func sendData(data: Data) {
-
-    }
-    
     public func captureVideoOutput(sampleBuffer: CMSampleBuffer, presentationTimestamp: CMTime, presentationDuration: CMTime) {
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         VTCompressionSessionEncodeFrame(session!, imageBuffer!, presentationTimestamp, kCMTimeInvalid, nil, nil, nil)

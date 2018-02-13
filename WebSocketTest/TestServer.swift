@@ -103,7 +103,7 @@ class TestServer: NSObject {
 //    }
     
     public func sendData(data: Data) {
-        print("Sending data on WebSocket")
+        print("Sending \(data.count) bytes on WebSocket")
         socketQueue.async {
             for (_, websocket) in self.websocketMap {
                 websocket.send(data: data)
@@ -166,7 +166,7 @@ class TestServer: NSObject {
         withUnsafePointer(to: &short) {
             data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<Int16>.size)
         }
-        print("Server sending broadcast")
+//        print("Server sending broadcast")
         data.withUnsafeBytes { (u8Ptr: UnsafePointer<UInt8>) in
             let rawPtr = UnsafeRawPointer(u8Ptr)
             let bytesSent = send(socketDescriptor, rawPtr, data.count, 0)
