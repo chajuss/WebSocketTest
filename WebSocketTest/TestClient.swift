@@ -66,48 +66,7 @@ class TestClient: NSObject {
         }
     }
     
-    private func parseData(data: Data) {
-        let firstByte = data.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
-        guard firstByte == 101 else {
-            print("Currupted data=\(firstByte) (expected 101)")
-            return
-        }
-        var currData = data.advanced(by: MemoryLayout<UInt8>.size)
-        let byte0 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
-        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
-        guard byte0 == 0 else {
-            print("Currupted data=\(firstByte) (expected 0)")
-            return
-        }
-        
-        let short = currData.withUnsafeBytes {(ptr: UnsafePointer<Int16>) -> Int16 in return ptr.pointee.bigEndian}
-        currData = currData.advanced(by: MemoryLayout<Int16>.size)
-        guard short == 255 else {
-            print("Currupted data=\(firstByte) (expected 255)")
-            return
-        }
-        
-        let byte1 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
-        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
-        guard byte1 == 1 else {
-            print("Currupted data=\(firstByte) (expected 1)")
-            return
-        }
-        
-        let byte2 = currData.withUnsafeBytes {(ptr: UnsafePointer<UInt8>) -> UInt8 in return ptr.pointee}
-        currData = currData.advanced(by: MemoryLayout<UInt8>.size)
-        guard byte2 == 0 else {
-            print("Currupted data=\(firstByte) (expected 0)")
-            return
-        }
-        
-        let int = currData.withUnsafeBytes {(ptr: UnsafePointer<Int32>) -> Int32 in return ptr.pointee.bigEndian}
-        guard int == 300 else {
-            print("Currupted data=\(firstByte) (expected 300)")
-            return
-        }
-    }
-    
+    // MARK: - Respond to server
     private func prapareData() -> Data {
         var data = Data()
         var byte101: UInt8 = UInt8(101).bigEndian
@@ -144,6 +103,7 @@ class TestClient: NSObject {
         }
     }
     
+    // MARK: - Detect Server
     private func startClientListenerTimer() {
         let queue = DispatchQueue(label: "com.chajuss.client.timer")
         listenerTimer = DispatchSource.makeTimerSource(queue: queue)

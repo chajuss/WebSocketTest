@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF1C29615A9CDA410BEAF7BBD8BD6C16"
-               BuildableName = "RxCocoa.framework"
-               BlueprintName = "RxCocoa"
+               BlueprintIdentifier = "7B67696F0F6D9ADB2BFA0C79ACD25E5A"
+               BuildableName = "PocketSocket.framework"
+               BlueprintName = "PocketSocket"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF1C29615A9CDA410BEAF7BBD8BD6C16"
-            BuildableName = "RxCocoa.framework"
-            BlueprintName = "RxCocoa"
+            BlueprintIdentifier = "7B67696F0F6D9ADB2BFA0C79ACD25E5A"
+            BuildableName = "PocketSocket.framework"
+            BlueprintName = "PocketSocket"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

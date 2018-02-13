@@ -8,18 +8,19 @@
 
 import Foundation
 import Telegraph
+import PocketSocket
 
 
 // MARK: - ServerWebSocketDelegate
 extension TestServer: ServerWebSocketDelegate {
     func server(_ server: Server, webSocketDidConnect webSocket: WebSocket, handshake: HTTPRequest) {
         print("WebSocket connected to Server")
-        websocketMap[webSocket as! WebSocketConnection] = webSocket
+        telegraphSocketMap[webSocket as! WebSocketConnection] = webSocket
     }
     
     func server(_ server: Server, webSocketDidDisconnect webSocket: WebSocket, error: Error?) {
         print("WebSocket disconnected from Server")
-        _ = websocketMap.removeValue(forKey: webSocket as! WebSocketConnection)
+        _ = telegraphSocketMap.removeValue(forKey: webSocket as! WebSocketConnection)
     }
     
     func server(_ server: Server, webSocket: WebSocket, didReceiveMessage message: WebSocketMessage) {
@@ -31,31 +32,81 @@ extension TestServer: ServerWebSocketDelegate {
     }
 }
 
+// MARK: - PSWebSocketServerDelegate
+extension TestServer: PSWebSocketServerDelegate {
+    func serverDidStart(_ server: PSWebSocketServer!) {
+        print("WebSocket server started")
+    }
+    
+    func serverDidStop(_ server: PSWebSocketServer!) {
+        print("WebSocket server stopped")
+    }
+    
+    func server(_ server: PSWebSocketServer!, didFailWithError error: Error!) {
+        print("WebSocket server failed with error: \(error)")
+    }
+    
+    func server(_ server: PSWebSocketServer!, webSocketDidOpen webSocket: PSWebSocket!) {
+        print("Websocket connected to server")
+        pocketSocketArray.append(webSocket)
+    }
+    
+    func server(_ server: PSWebSocketServer!, webSocket: PSWebSocket!, didReceiveMessage message: Any!) {
+        print("WebSocket receivea message")
+    }
+    
+    func server(_ server: PSWebSocketServer!, webSocket: PSWebSocket!, didFailWithError error: Error!) {
+        print("WebSocket failed with error: \(error)")
+        if let index = pocketSocketArray.index(of: webSocket) {
+            pocketSocketArray.remove(at: index)
+        }
+    }
+    
+    func server(_ server: PSWebSocketServer!, webSocket: PSWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+        print("WebSocket closed with code: \(code) reason: \(reason) clean=\(wasClean)")
+        if let index = pocketSocketArray.index(of: webSocket) {
+            pocketSocketArray.remove(at: index)
+        }
+    }
+    
+    
+}
+
 class TestServer: NSObject {
     //MARK: - TestServer Members
     private let serverPort: UInt = 5000
-    private var server: Server!
+    private var telegraphServer: Server!
+    private var pocketServer: PSWebSocketServer!
     
     private var socketDescriptor: Int32 = -1
     private let broadcastPort: UInt16 = 1111 //UDP
     private var broadcastTimer: DispatchSourceTimer?
     private let broadcastRetransmitTime = 1
     
-    private var transmitTimer: DispatchSourceTimer?
-    private let retransmitTime = 30
-    
-    private var websocketMap: [Telegraph.WebSocketConnection: Telegraph.WebSocket]!
+    private var telegraphSocketMap: [Telegraph.WebSocketConnection: Telegraph.WebSocket]!
+    private var pocketSocketArray: [PSWebSocket]!
     
     private let socketQueue = DispatchQueue(label: "com.chajuss.server.socket")
+    
+    private let useTelegraph: Bool = true
 
-    // MARK: - TestServer Functions
+    // MARK: - TestServer
     override init() {
         super.init()
-        websocketMap = [Telegraph.WebSocketConnection: Telegraph.WebSocket]()
-        server = Server()
-        server.webSocketDelegate = self
-        print("Starting WebSocketServer with pingInterval=\(server.webSocketConfig.pingInterval) readTimeout=\(server.webSocketConfig.readTimeout) writeHeaderTimeout=\(server.webSocketConfig.writeHeaderTimeout) writePayloadTimeout=\(server.webSocketConfig.writePayloadTimeout)")
-        try? server.start(onPort: UInt16(serverPort))
+        telegraphSocketMap = [Telegraph.WebSocketConnection: Telegraph.WebSocket]()
+        pocketSocketArray = [PSWebSocket]()
+        
+        if useTelegraph {
+            telegraphServer = Server()
+            telegraphServer.webSocketDelegate = self
+            print("Starting WebSocketServer with pingInterval=\(telegraphServer.webSocketConfig.pingInterval) readTimeout=\(telegraphServer.webSocketConfig.readTimeout) writeHeaderTimeout=\(telegraphServer.webSocketConfig.writeHeaderTimeout) writePayloadTimeout=\(telegraphServer.webSocketConfig.writePayloadTimeout)")
+            try? telegraphServer.start(onPort: UInt16(serverPort))
+        } else {
+            pocketServer = PSWebSocketServer.init(host: nil, port:serverPort)
+            pocketServer.delegate = self
+            pocketServer.start()
+        }
+        
         guard bindBroadcastSocket() != -1 else {
             print("failed to bind broadcast socket")
             startServerBroadcastTimer()
@@ -70,11 +121,14 @@ class TestServer: NSObject {
     
     public func stopServer() {
         print("Stopping server")
-//        stopServerTransmitTimer()
         stopServerBroadcastTimer()
-        if server != nil {
-            server.stop()
-            server = nil
+        if telegraphServer != nil {
+            telegraphServer.stop()
+            telegraphServer = nil
+        }
+        if pocketServer != nil {
+            pocketServer.stop()
+            pocketServer = nil
         }
         if socketDescriptor != -1 {
             close(socketDescriptor)
@@ -83,61 +137,16 @@ class TestServer: NSObject {
     }
     
     // MARK: - Send Data
-//    public func startSendingData() {
-//        startServerTransmitTimer()
-//    }
-//
-//    private func startServerTransmitTimer() {
-//        let queue = DispatchQueue(label: "com.chajuss.server.transmitTimer")
-//        transmitTimer = DispatchSource.makeTimerSource(queue: queue)
-//        transmitTimer!.schedule(deadline: .now(), repeating: .milliseconds(retransmitTime))
-//        transmitTimer!.setEventHandler { [weak self] in
-//            self?.sendData()
-//        }
-//        transmitTimer!.resume()
-//    }
-//
-//    private func stopServerTransmitTimer() {
-//        transmitTimer?.cancel()
-//        transmitTimer = nil
-//    }
-    
     public func sendData(data: Data) {
         print("Sending \(data.count) bytes on WebSocket")
         socketQueue.async {
-            for (_, websocket) in self.websocketMap {
+            for (_, websocket) in self.telegraphSocketMap {
                 websocket.send(data: data)
             }
+            for websocket in self.pocketSocketArray {
+                websocket.send(data)
+            }
         }
-    }
-    
-    private func prapareData() -> Data {
-        var data = Data()
-        var byte101: UInt8 = UInt8(101).bigEndian
-        withUnsafePointer(to: &byte101) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
-        }
-        var byte0: UInt8 = UInt8(0).bigEndian
-        withUnsafePointer(to: &byte0) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
-        }
-        var short: Int16 = Int16(255).bigEndian
-        withUnsafePointer(to: &short) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<Int16>.size)
-        }
-        var byte1: UInt8 = UInt8(1).bigEndian
-        withUnsafePointer(to: &byte1) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
-        }
-        var byte2: UInt8 = UInt8(0).bigEndian
-        withUnsafePointer(to: &byte2) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<UInt8>.size)
-        }
-        var int: Int32 = Int32(300).bigEndian
-        withUnsafePointer(to: &int) {
-            data.append($0.withMemoryRebound(to: UInt8.self, capacity: 1, {$0}), count: MemoryLayout<Int32>.size)
-        }
-        return data
     }
     
     // MARK: - Broadcast Methods
